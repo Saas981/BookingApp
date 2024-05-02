@@ -1,37 +1,46 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { NoteComponent } from '../note/note.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NoteFetchingService } from '../services/note-fetching.service';
 import { OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NoteComponent, CommonModule,FormsModule ],
+  imports: [NoteComponent, CommonModule,FormsModule, ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit  {
+export class DashboardComponent implements OnDestroy  {
 
-  // dummyData = [
-  //   { recipient: 'Mark', paymentAmount: '$50', description: 'Lorem ipsum dolor sit amet.' },
-  //   { recipient: 'Cole', paymentAmount: '$100', description: 'Consectetur adipiscing elit.' },
-  //   { recipient: 'Mark', paymentAmount: '$50', description: 'Lorem ipsum dolor sit amet.' },
-  //   { recipient: 'Cole', paymentAmount: '$100', description: 'Consectetur adipiscing elit.' },
-  //   // Add more dummy data as needed
-  // ];
   dummyData:any = []
+  filteredData: any = []; // Array to store filtered data
+  searchText: string = ''; // Variable to store search text
+  private notesSubscription: Subscription | undefined;
 
-  // Property to control the visibility of the edit modal
-  isEditModalOpen = false;
+  isEditModalOpen = false;   // Property to control the visibility of the edit modal
+  isCreateModalOpen = false; // Property to control the visibility of the create modal
 
   // Property to store the selected note for editing
   selectedNote: any;
 
-  constructor(private noteFetchingService: NoteFetchingService) { }
+  newNote: any = { // Object to store new note data
+    recipient: '',
+    paymentAmount: '',
+    description: ''
+  };
 
+  constructor(private noteFetchingService: NoteFetchingService) {
+    this.fetchNotes();
+    this.subscribeToNotes();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeFromNotes();
+  }
   ngOnInit(): void {
     this.fetchNotes();
   }
@@ -40,12 +49,20 @@ export class DashboardComponent implements OnInit  {
     this.noteFetchingService.fetchNotes().then(
       (notes: any[]) => {
         this.dummyData = notes;
-        console.log("DATA ",notes)
+        this.filteredData = notes;
         this.selectedNote = notes[0]
       },
       (error) => {
         console.error('Error fetching notes:', error);
       }
+    );
+  }
+
+  filterNotes(): void {
+    this.filteredData = this.dummyData.filter((note: any) =>
+      note.recipient.toLowerCase().includes(this.searchText.toLowerCase()) ||
+    note.paymentAmount.toString().includes(this.searchText.toLowerCase()) ||
+    note.description.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
@@ -73,5 +90,54 @@ export class DashboardComponent implements OnInit  {
       }
     );
   }
+
+
+  openCreateModal(): void {
+    this.isCreateModalOpen = true;
+  }
+
+  closeCreateModal(): void {
+    this.isCreateModalOpen = false;
+    // Reset new note object when modal is closed
+    this.newNote = {
+      recipient: '',
+      paymentAmount: '',
+      description: ''
+    };
+  }
+
+  saveNewNote(): void {
+    // Call the createNote method from the NoteFetchingService
+    this.noteFetchingService.createNote(this.newNote).then(
+      () => {
+        console.log('New note saved successfully!');
+        this.closeCreateModal();
+      },
+      (error) => {
+        console.error('Error saving new note:', error);
+      }
+    );
+  }
+
+  private subscribeToNotes(): void {
+    this.notesSubscription = this.noteFetchingService.notes$.subscribe(
+      (notes: any[]) => {
+        this.dummyData = notes;
+        this.filteredData = notes;
+        this.selectedNote = notes[0];
+      },
+      (error) => {
+        console.error('Error subscribing to notes:', error);
+      }
+    );
+  }
+
+  private unsubscribeFromNotes(): void {
+    if (this.notesSubscription) {
+      this.notesSubscription.unsubscribe();
+    }
+  }
+ 
+  
   
 }
