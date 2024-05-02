@@ -1,12 +1,7 @@
 .note {
-    font-size: 16px; // Initial font size
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .note:hover {
-    transform: scale(1.1); // Scale up on hover
-  }
-  
+  background-color: #6e1a1a;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}

@@ -1,3 +1,5 @@
-<button class="note" [style.background]="color" (click)="changeColor()">
-    {{ buttonText }}
-  </button>
+<div class="note">
+  <h2>{{ note.title }}</h2>
+  <p>Payment Amount: {{ note.paymentAmount }}</p>
+  <p>Description: {{ note.description }}</p>
+</div>

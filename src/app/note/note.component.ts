@@ -8,19 +8,7 @@ import { Component,Input  } from '@angular/core';
   styleUrl: './note.component.scss'
 })
 export class NoteComponent {
-  color: string = 'lightblue'; // Default color
-  @Input() buttonText: string = 'Note';
-  fontSize: number = 16; // Initial font size
-  changeColor(){
-    console.log("CHANGING")
+  @Input() note: any;
 
-    if(this.color == "lightblue"){
-      this.color = "red"
-      this.fontSize+=5;
-    }
-    else{
-      this.color = "lightblue"
-
-    }
-  }
+  constructor() { }
 }
