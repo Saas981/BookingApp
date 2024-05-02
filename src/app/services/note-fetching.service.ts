@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable,Subject } from 'rxjs';
-import { getFirestore, collection, getDocs,setDoc,doc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs,setDoc,doc,deleteDoc } from 'firebase/firestore';
 import { onSnapshot,Unsubscribe } from 'firebase/firestore';
 
 @Injectable({
@@ -68,7 +68,15 @@ export class NoteFetchingService {
     }
   }
 
-  
+  async deleteNote(noteId: string): Promise<void> {
+    try {
+      const noteRef = doc(this.db, 'notes', noteId);
+      await deleteDoc(noteRef);
+      console.log('Note deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting note:', error);
+    }
+  }
 
   // Define other methods for CRUD operations like creating, updating, and deleting notes
 }
