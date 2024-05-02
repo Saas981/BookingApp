@@ -40,6 +40,7 @@ export class DashboardComponent implements OnInit  {
     this.noteFetchingService.fetchNotes().then(
       (notes: any[]) => {
         this.dummyData = notes;
+        console.log("DATA ",notes)
         this.selectedNote = notes[0]
       },
       (error) => {
@@ -55,7 +56,22 @@ export class DashboardComponent implements OnInit  {
   }
 
   // Method to close the edit modal
-  closeEditModal() {
-    this.isEditModalOpen = false;
+  closeEditModal(): void {
+    if (!this.selectedNote || !this.selectedNote.id) {
+      console.error('Error: Selected note or its id is undefined');
+      return;
+    }
+  
+    // Save the updated note to Firestore
+    this.noteFetchingService.updateNote(this.selectedNote).then(
+      () => {
+        console.log('Note updated successfully!');
+        this.isEditModalOpen = false; // Close the modal after saving
+      },
+      (error) => {
+        console.error('Error updating note:', error);
+      }
+    );
   }
+  
 }

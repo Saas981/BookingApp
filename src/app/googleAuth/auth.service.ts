@@ -21,4 +21,18 @@ export class AuthService {
       this.router.navigate(['/signin']);
     }
   }
+
+  login(): void {
+    // Perform login logic here
+
+    // Once login is successful, store authentication flag in localStorage
+    localStorage.setItem('authenticated', 'true');
+  }
+
+  logout(): void {
+    // Perform logout logic here
+
+    // Clear authentication flag from localStorage
+    localStorage.removeItem('authenticated');
+  }
 }

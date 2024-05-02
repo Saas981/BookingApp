@@ -7,8 +7,6 @@ import { SigninComponent } from './signin/signin.component';
 import { LandingComponent } from './landing/landing.component';
 import { signOut,getAuth } from 'firebase/auth';
 import { NavbarComponent } from './navbar/navbar.component';
-import { getFirestore } from "firebase/firestore";
-
 @Component({
   selector: 'app-root',
   standalone: true,
