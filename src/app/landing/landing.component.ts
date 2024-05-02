@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GoogleSsoDirective } from '../google-sso.directive';
+import { GoogleSsoDirective } from '../googleAuth/google-sso.directive';
 
 @Component({
   selector: 'app-landing',

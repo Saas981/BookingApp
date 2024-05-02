@@ -3,7 +3,7 @@ import {  Routes } from '@angular/router';
 import { LandingComponent } from './landing/landing.component';
 import { SigninComponent } from './signin/signin.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { AuthGuard } from './auth.guard'; // Import the AuthGuard
+import { AuthGuard } from './googleAuth/auth.guard'; // Import the AuthGuard
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },

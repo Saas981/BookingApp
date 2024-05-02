@@ -6,34 +6,21 @@ import { initFlowbite } from 'flowbite';
 import { SigninComponent } from './signin/signin.component';
 import { LandingComponent } from './landing/landing.component';
 import { signOut,getAuth } from 'firebase/auth';
+import { NavbarComponent } from './navbar/navbar.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,NoteComponent,RouterLink,RouterLinkActive,SigninComponent,LandingComponent],
+  imports: [RouterOutlet,NoteComponent,RouterLink,RouterLinkActive,SigninComponent,LandingComponent,NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit{
   title = 'BookingApp';
-  constructor(private router: Router) {}
+  constructor() {}
 
   ngOnInit(): void {
     initFlowbite();
   }
 
-    // Method to sign out the user
-    signOut(){
-      const auth = getAuth();
-      signOut(auth)
-        .then(() => {
-          // Sign-out successful.
-          console.log('User signed out');
-          this.router.navigate(['/']);
 
-        })
-        .catch((error) => {
-          // An error happened.
-          console.error('Sign-out error:', error);
-        });
-    }
 }

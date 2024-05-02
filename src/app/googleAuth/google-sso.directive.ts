@@ -3,6 +3,7 @@ import { GoogleAuthProvider } from 'firebase/auth';
 import { signInWithPopup } from 'firebase/auth';
 import { getAuth } from 'firebase/auth';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Directive({
   selector: '[googlesSso]',
@@ -20,6 +21,8 @@ export class GoogleSsoDirective {
     //   console.log("ITS OWRKINS")
     //   this.elementRef.nativeElement.color
     // }
+    constructor(private router: Router) {}
+
 @HostListener("click")
   async onClick() {
 
@@ -36,6 +39,8 @@ export class GoogleSsoDirective {
         console.log("CREDNETILA ",credential)
         console.log("TOKEN ",token)
         console.log("USER ",user)
+        this.router.navigate(['/dashboard']);
+
         // IdP data available using getAdditionalUserInfo(result)
         // ...
       }).catch((error) => {
