@@ -40,9 +40,9 @@
           <!-- Loop through dummy data and render each note item -->
           <ng-container *ngFor="let note of dummyData">
             <tr class="bg-gray-800 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600"> <!-- Changed background color to dark gray -->
-              <td class="p-4 text-white">{{ note.recipient }}</td> <!-- Changed text color to white -->
-              <td class="px-6 py-4 text-white">{{ note.paymentAmount }}</td> <!-- Changed text color to white -->
-              <td class="px-6 py-4 text-white">{{ note.description }}</td> <!-- Changed text color to white -->
+              <td class="p-4 text-white">{{ note?.recipient }}</td> <!-- Changed text color to white -->
+              <td class="px-6 py-4 text-white">$ {{ note?.paymentAmount }}</td> <!-- Changed text color to white -->
+              <td class="px-6 py-4 text-white">{{ note?.description }}</td> <!-- Changed text color to white -->
               <td class="px-6 py-4">
                 <!-- Add your action button here -->
                 <button (click)="openEditModal(note)" class="text-blue-400 dark:text-blue-500 hover:underline">Edit</button> <!-- Adjusted text color for dark mode -->
