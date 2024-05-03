@@ -6,16 +6,18 @@ import { NoteFetchingService } from '../services/note-fetching.service';
 import { OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ClickOutsideDirective } from '../services/click-outside.directive';
-
+import { AuthService } from '../googleAuth/auth.service';
+import { User } from 'firebase/auth';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NoteComponent, CommonModule,FormsModule,ClickOutsideDirective ],
+  imports: [NoteComponent, CommonModule,FormsModule,ClickOutsideDirective,],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnDestroy  {
+  currentUser!: User | null;
 
   dummyData:any = []
   filteredData: any = []; // Array to store filtered data
@@ -32,21 +34,31 @@ export class DashboardComponent implements OnDestroy  {
   selectedNote: any;
 
   newNote: any = { // Object to store new note data
+    owner:this.currentUser?.email,
     recipient: '',
     paymentAmount: '',
     description: ''
   };
 
-  constructor(private noteFetchingService: NoteFetchingService) {
+
+  constructor(private noteFetchingService: NoteFetchingService, private authService: AuthService) {
     this.fetchNotes();
     this.subscribeToNotes();
+    this.currentUser = this.authService.getCurrentUser();
+
   }
 
   ngOnDestroy(): void {
     this.unsubscribeFromNotes();
   }
   ngOnInit(): void {
+    this.currentUser = this.authService.getCurrentUser();
+
+    if (this.currentUser) {
+      console.log("EMAIL",this.currentUser);
+    }
     this.selectedNote = {
+      owner:'',
       recipient: '',
       paymentAmount: '',
       description: ''
@@ -119,6 +131,7 @@ export class DashboardComponent implements OnDestroy  {
     this.isCreateModalOpen = false;
     // Reset new note object when modal is closed
     this.newNote = {
+      owner:'',
       recipient: '',
       paymentAmount: 0,
       description: ''

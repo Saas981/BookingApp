@@ -9,6 +9,12 @@ export class AuthService {
 
   constructor(private router: Router) { }
 
+  getCurrentUser(): User | null {
+    const auth = getAuth();
+    const userEmail = localStorage.getItem('currentUser')?? 'unknown';
+
+    return userEmail !== null ? userEmail as unknown as User : null;
+  }
   // Method to check if the user is authenticated
   isAuthenticated(): boolean {
     const auth = getAuth();
@@ -34,5 +40,7 @@ export class AuthService {
 
     // Clear authentication flag from localStorage
     localStorage.removeItem('authenticated');
+    localStorage.removeItem('currentUser');
+
   }
 }

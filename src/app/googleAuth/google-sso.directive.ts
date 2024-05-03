@@ -28,7 +28,7 @@ export class GoogleSsoDirective {
 
     console.log("CLICK DETECTED")
     const auth = getAuth();
-    console
+  
     signInWithPopup(auth, new GoogleAuthProvider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
@@ -36,7 +36,11 @@ export class GoogleSsoDirective {
         const token:any = credential?.accessToken;
         // The signed-in user info.
         const user = result.user;
+        const userEmail = user?.email ?? 'unknown'; // Provide a default value if user or user.email is null/undefined
+
         localStorage.setItem('googleToken', token);
+        localStorage.setItem('currentUser', userEmail);
+
         this.router.navigate(['/dashboard']);
 
         // IdP data available using getAdditionalUserInfo(result)
