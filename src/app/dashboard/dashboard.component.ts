@@ -5,12 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { NoteFetchingService } from '../services/note-fetching.service';
 import { OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { ClickOutsideDirective } from '../services/click-outside.directive';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NoteComponent, CommonModule,FormsModule, ],
+  imports: [NoteComponent, CommonModule,FormsModule,ClickOutsideDirective ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -20,6 +21,8 @@ export class DashboardComponent implements OnDestroy  {
   filteredData: any = []; // Array to store filtered data
   searchText: string = ''; // Variable to store search text
   private notesSubscription: Subscription | undefined;
+
+  isDropdownOpen: boolean = false;
 
   isEditModalOpen = false;   // Property to control the visibility of the edit modal
   isCreateModalOpen = false; // Property to control the visibility of the create modal
@@ -43,8 +46,23 @@ export class DashboardComponent implements OnDestroy  {
     this.unsubscribeFromNotes();
   }
   ngOnInit(): void {
+    this.selectedNote = {
+      recipient: '',
+      paymentAmount: '',
+      description: ''
+    }
     this.fetchNotes();
   }
+
+
+  toggleDropdown(): void {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  closeDropdown(): void {
+    this.isDropdownOpen = false;
+  }
+  
 
   fetchNotes(): void {
     this.noteFetchingService.fetchNotes().then(
@@ -142,11 +160,13 @@ export class DashboardComponent implements OnDestroy  {
   storeCheckboxValue(event: any, note: any): void {
     // Implement your logic to store the checkbox value here
     if (event.target.checked) {
-      console.log('Checkbox checked for note:', note);
+      //console.log('Checkbox checked for note:', note);
       // Add the note to the selectedNotes array
       this.selectedNotes.push(note);
+     // console.log(this.selectedNotes)
     } else {
-      console.log('Checkbox unchecked for note:', note);
+   //   console.log('Checkbox unchecked for note:', note);
+
       // Remove the note from the selectedNotes array
       const index = this.selectedNotes.findIndex(selectedNote => selectedNote.id === note.id);
       if (index !== -1) {
@@ -160,7 +180,7 @@ export class DashboardComponent implements OnDestroy  {
   
     // Update the isChecked property of each note in filteredData
     this.filteredData.forEach((note: any) => note.isChecked = isChecked);
-    this.selectedNotes = this.filteredData
+    this.selectedNotes = [...this.filteredData];
 
   }
   
