@@ -23,6 +23,7 @@ export class DashboardComponent implements OnDestroy  {
 
   isEditModalOpen = false;   // Property to control the visibility of the edit modal
   isCreateModalOpen = false; // Property to control the visibility of the create modal
+  selectedNotes: any[] = []; // Array to store selected notes
 
   // Property to store the selected note for editing
   selectedNote: any;
@@ -101,7 +102,7 @@ export class DashboardComponent implements OnDestroy  {
     // Reset new note object when modal is closed
     this.newNote = {
       recipient: '',
-      paymentAmount: '',
+      paymentAmount: 0,
       description: ''
     };
   }
@@ -138,6 +139,60 @@ export class DashboardComponent implements OnDestroy  {
     }
   }
  
+  storeCheckboxValue(event: any, note: any): void {
+    // Implement your logic to store the checkbox value here
+    if (event.target.checked) {
+      console.log('Checkbox checked for note:', note);
+      // Add the note to the selectedNotes array
+      this.selectedNotes.push(note);
+    } else {
+      console.log('Checkbox unchecked for note:', note);
+      // Remove the note from the selectedNotes array
+      const index = this.selectedNotes.findIndex(selectedNote => selectedNote.id === note.id);
+      if (index !== -1) {
+        this.selectedNotes.splice(index, 1);
+      }
+    }
+  }
+
+  selectAllNotes(event: any): void {
+    const isChecked = event.target.checked;
+  
+    // Update the isChecked property of each note in filteredData
+    this.filteredData.forEach((note: any) => note.isChecked = isChecked);
+    this.selectedNotes = this.filteredData
+
+  }
+  
+  deleteSelectedNotes(): void {
+    // Check if there are selected notes
+    if (this.selectedNotes.length === 0) {
+      console.log('No notes selected for deletion');
+      return;
+    }
+  
+    // Implement your logic to delete selected notes
+    this.selectedNotes.forEach((note: any) => {
+      // Call your delete method here for each selected note
+      this.noteFetchingService.deleteNote(note.id).then(
+        () => {
+          console.log('Note deleted successfully:', note.id);
+          // Remove the deleted note from filteredData
+          const index = this.filteredData.findIndex((filteredNote: any) => filteredNote.id === note.id);
+          if (index !== -1) {
+            this.filteredData.splice(index, 1);
+          }
+        },
+        (error) => {
+          console.error('Error deleting note:', error);
+        }
+      );
+    });
+  
+    // Clear the selectedNotes array after deletion
+    this.selectedNotes = [];
+  }
+  
   
   
 }
