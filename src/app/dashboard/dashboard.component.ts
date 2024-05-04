@@ -34,7 +34,7 @@ export class DashboardComponent implements OnDestroy  {
   selectedNote: any;
 
   newNote: any = { // Object to store new note data
-    owner:this.currentUser?.email,
+    owner:this.currentUser,
     recipient: '',
     paymentAmount: '',
     description: ''
@@ -53,7 +53,7 @@ export class DashboardComponent implements OnDestroy  {
   }
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
-
+    this.newNote.owner = this.currentUser
     if (this.currentUser) {
       console.log("EMAIL",this.currentUser);
     }
@@ -92,6 +92,7 @@ export class DashboardComponent implements OnDestroy  {
   filterNotes(): void {
     this.filteredData = this.dummyData.filter((note: any) =>
       note.recipient.toLowerCase().includes(this.searchText.toLowerCase()) ||
+    note.owner.toLowerCase().includes(this.searchText.toLowerCase()) ||
     note.paymentAmount.toString().includes(this.searchText.toLowerCase()) ||
     note.description.toLowerCase().includes(this.searchText.toLowerCase())
     );
@@ -131,7 +132,7 @@ export class DashboardComponent implements OnDestroy  {
     this.isCreateModalOpen = false;
     // Reset new note object when modal is closed
     this.newNote = {
-      owner:'',
+      owner:this.currentUser,
       recipient: '',
       paymentAmount: 0,
       description: ''
@@ -140,6 +141,8 @@ export class DashboardComponent implements OnDestroy  {
 
   saveNewNote(): void {
     // Call the createNote method from the NoteFetchingService
+    console.log("NOTE ",this.newNote)
+    this.newNote.owner == this.currentUser
     this.noteFetchingService.createNote(this.newNote).then(
       () => {
         console.log('New note saved successfully!');
@@ -199,6 +202,7 @@ export class DashboardComponent implements OnDestroy  {
   
   deleteSelectedNotes(): void {
     // Check if there are selected notes
+    console.log("SELECTED NOTES ",this.selectedNotes.length)
     if (this.selectedNotes.length === 0) {
       console.log('No notes selected for deletion');
       return;
